@@ -13,6 +13,7 @@ TARGET_USES_IMS := false
 TARGET_USES_MEDIA_EXTENSIONS := true
 
 # media_profiles and media_codecs xmls for msm8952
+ifneq ($(filter hydrogen kenzo,$(TARGET_DEVICE)),)
 ifeq ($(TARGET_ENABLE_QC_AV_ENHANCEMENTS), true)
 PRODUCT_COPY_FILES += device/qcom/msm8952_32/media/media_profiles_8952.xml:system/etc/media_profiles.xml \
                       device/qcom/msm8952_32/media/media_profiles_8956.xml:system/etc/media_profiles_8956.xml \
@@ -23,14 +24,17 @@ PRODUCT_COPY_FILES += device/qcom/msm8952_32/media/media_profiles_8952.xml:syste
                       device/qcom/msm8952_32/media/media_codecs_8956_v1.xml:system/etc/media_codecs_8956_v1.xml \
                       device/qcom/msm8952_32/media/media_codecs_performance_8956_v1.xml:system/etc/media_codecs_performance_8956_v1.xml
 endif
+endif
 
 PRODUCT_COPY_FILES += device/qcom/msm8952_64/whitelistedapps.xml:system/etc/whitelistedapps.xml
 
+ifneq ($(filter hydrogen kenzo,$(TARGET_DEVICE)),)
 PRODUCT_PROPERTY_OVERRIDES += \
            dalvik.vm.heapminfree=4m \
            dalvik.vm.heapstartsize=16m
 $(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
 $(call inherit-product, device/qcom/common/common64.mk)
+endif
 
 PRODUCT_NAME := msm8952_64
 PRODUCT_DEVICE := msm8952_64
@@ -53,7 +57,7 @@ PRODUCT_BOOT_JARS += oem-services
 endif
 
 # default is nosdcard, S/W button enabled in resource
-PRODUCT_CHARACTERISTICS := nosdcard
+#PRODUCT_CHARACTERISTICS := nosdcard
 
 # When can normal compile this module,  need module owner enable below commands
 # font rendering engine feature switch
@@ -72,8 +76,10 @@ PRODUCT_PACKAGES += libGLES_android
 PRODUCT_BOOT_JARS += \
            qcom.fmradio
 
+ifneq ($(filter hydrogen kenzo,$(TARGET_DEVICE)),)
 # Audio configuration file
 -include $(TOPDIR)hardware/qcom/audio/configs/msm8952_64/msm8952_64.mk
+endif
 
 # MIDI feature
    PRODUCT_COPY_FILES += \
@@ -87,6 +93,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += wcnss_service
 
+ifneq ($(filter hydrogen kenzo,$(TARGET_DEVICE)),)
 # MSM IRQ Balancer configuration file
 PRODUCT_COPY_FILES += \
     device/qcom/msm8952_64/msm_irqbalance.conf:system/vendor/etc/msm_irqbalance.conf \
@@ -97,11 +104,11 @@ PRODUCT_COPY_FILES += \
     device/qcom/msm8952_64/WCNSS_qcom_cfg.ini:system/etc/wifi/WCNSS_qcom_cfg.ini \
     device/qcom/msm8952_32/WCNSS_wlan_dictionary.dat:persist/WCNSS_wlan_dictionary.dat \
     device/qcom/msm8952_64/WCNSS_qcom_wlan_nv.bin:persist/WCNSS_qcom_wlan_nv.bin
+endif
 
 PRODUCT_PACKAGES += \
     wpa_supplicant_overlay.conf \
     p2p_supplicant_overlay.conf
-
 
 # Feature definition files for msm8952
 PRODUCT_COPY_FILES += \
@@ -126,16 +133,18 @@ PRODUCT_PACKAGE_OVERLAYS := $(QCPATH)/qrdplus/Extension/res \
        $(QCPATH)/qrdplus/globalization/multi-language/res-overlay \
        $(PRODUCT_PACKAGE_OVERLAYS)
 
+ifneq ($(filter hydrogen kenzo,$(TARGET_DEVICE)),)
 # Sensor HAL conf file
  PRODUCT_COPY_FILES += \
      device/qcom/msm8952_64/sensors/hals.conf:system/etc/sensors/hals.conf
 
-PRODUCT_SUPPORTS_VERITY := true
-PRODUCT_SYSTEM_VERITY_PARTITION := /dev/block/bootdevice/by-name/system
+#PRODUCT_SUPPORTS_VERITY := true
+#PRODUCT_SYSTEM_VERITY_PARTITION := /dev/block/bootdevice/by-name/system
 
 #for android_filesystem_config.h
 PRODUCT_PACKAGES += \
     fs_config_files
+endif
 
 #FEATURE_OPENGLES_EXTENSION_PACK support string config file
 PRODUCT_COPY_FILES += \

@@ -1,5 +1,6 @@
 LOCAL_PATH := $(call my-dir)
 
+ifneq ($(filter hydrogen kenzo,$(TARGET_DEVICE)),)
 #----------------------------------------------------------------------
 # Compile (L)ittle (K)ernel bootloader and the nandwrite utility
 #----------------------------------------------------------------------
@@ -30,6 +31,7 @@ include kernel/AndroidKernel.mk
 
 $(INSTALLED_KERNEL_TARGET): $(TARGET_PREBUILT_KERNEL) | $(ACP)
 	$(transform-prebuilt-to-target)
+endif
 
 #----------------------------------------------------------------------
 # Copy additional target-specific files
@@ -140,6 +142,7 @@ LOCAL_MODULE_PATH  := $(TARGET_OUT_ETC)/hostapd
 LOCAL_SRC_FILES    := hostapd.deny
 include $(BUILD_PREBUILT)
 
+ifneq ($(filter hydrogen kenzo,$(TARGET_DEVICE)),)
 #Create symbolic links
 $(shell mkdir -p $(TARGET_OUT_ETC)/firmware/wlan/prima; \
         ln -sf /persist/WCNSS_qcom_wlan_nv.bin \
@@ -167,7 +170,7 @@ RADIO_FILES := $(shell cd $(radio_dir) ; ls)
 $(foreach f, $(RADIO_FILES), \
 	$(call add-radio-file,radio/$(f)))
 endif
-
+endif
 #----------------------------------------------------------------------
 # extra images
 #----------------------------------------------------------------------
