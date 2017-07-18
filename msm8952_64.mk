@@ -96,7 +96,7 @@ endif
 #Android EGL implementation
 PRODUCT_PACKAGES += libGLES_android
 
-#PRODUCT_BOOT_JARS += \
+PRODUCT_BOOT_JARS += \
            qcom.fmradio
 
 # Audio configuration file
