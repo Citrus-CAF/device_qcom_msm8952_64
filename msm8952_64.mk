@@ -1,7 +1,7 @@
 TARGET_USES_AOSP_FOR_AUDIO := false
-TARGET_USES_QCOM_BSP := false
+#TARGET_USES_QCOM_BSP := false
 
-TARGET_USES_AOSP := true
+#-TARGET_USES_AOSP := true
 
 TARGET_USES_HWC2 := true
 TARGET_USES_HWC2ON1ADAPTER := true
@@ -24,15 +24,24 @@ TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
 #QTIC flag
 -include $(QCPATH)/common/config/qtic-config.mk
 
-
+ifneq ($(filter hydrogen kenzo,$(TARGET_DEVICE)),)
 # Camera configuration file. Shared by passthrough/binderized camera HAL
 PRODUCT_PACKAGES += camera.device@1.0-impl
 PRODUCT_PACKAGES += android.hardware.camera.provider@2.4-impl
 # Enable binderized camera HAL
 PRODUCT_PACKAGES += android.hardware.camera.provider@2.4-service
+endif
 
 # media_profiles and media_codecs xmls for msm8952
 ifeq ($(TARGET_ENABLE_QC_AV_ENHANCEMENTS), true)
+ifeq ($(filter hydrogen kenzo,$(TARGET_DEVICE)),)
+PRODUCT_COPY_FILES += device/qcom/msm8952_32/media/media_profiles_8956.xml:system/etc/media_profiles.xml \
+                      device/qcom/msm8952_32/media/media_profiles_8956.xml:system/vendor/etc/media_profiles.xml \
+                      device/qcom/msm8952_32/media/media_codecs_8956.xml:system/vendor/etc/media_codecs.xml \
+                      device/qcom/msm8952_32/media/media_codecs_performance_8956.xml:system/vendor/etc/media_codecs_performance.xml \
+                      device/qcom/msm8952_32/media/media_codecs_8956_v1.xml:system/vendor/etc/media_codecs_8956_v1.xml \
+                      device/qcom/msm8952_32/media/media_codecs_performance_8956_v1.xml:system/vendor/etc/media_codecs_performance_8956_v1.xml
+else
 PRODUCT_COPY_FILES += device/qcom/msm8952_32/media/media_profiles_8952.xml:system/etc/media_profiles.xml \
                       device/qcom/msm8952_32/media/media_profiles_8952.xml:system/vendor/etc/media_profiles.xml \
                       device/qcom/msm8952_32/media/media_profiles_8956.xml:system/etc/media_profiles_8956.xml \
@@ -44,7 +53,7 @@ PRODUCT_COPY_FILES += device/qcom/msm8952_32/media/media_profiles_8952.xml:syste
                       device/qcom/msm8952_32/media/media_codecs_8956_v1.xml:system/vendor/etc/media_codecs_8956_v1.xml \
                       device/qcom/msm8952_32/media/media_codecs_performance_8956_v1.xml:system/vendoretc/media_codecs_performance_8956_v1.xml
 endif
-
+endif
 # video seccomp policy files
 # copy to system/vendor as well (since some devices may symlink to system/vendor and not create an actual partition for vendor)
 PRODUCT_COPY_FILES += \
@@ -75,14 +84,14 @@ PRODUCT_PACKAGES += telephony-ext
 ifneq ($(strip $(QCPATH)),)
 #PRODUCT_BOOT_JARS += com.qti.dpmframework
 #PRODUCT_BOOT_JARS += dpmapi
-PRODUCT_BOOT_JARS += WfdCommon
+#PRODUCT_BOOT_JARS += WfdCommon
 #Android oem shutdown hook
 #PRODUCT_BOOT_JARS += oem-services
 #PRODUCT_BOOT_JARS += com.qti.location.sdk
 endif
 
 # default is nosdcard, S/W button enabled in resource
-PRODUCT_CHARACTERISTICS := nosdcard
+#PRODUCT_CHARACTERISTICS := nosdcard
 
 # When can normal compile this module,  need module owner enable below commands
 # font rendering engine feature switch
@@ -101,13 +110,14 @@ PRODUCT_PACKAGES += libGLES_android
 PRODUCT_BOOT_JARS += \
            qcom.fmradio
 
+ifneq ($(filter hydrogen kenzo,$(TARGET_DEVICE)),)
 # Audio configuration file
 -include $(TOPDIR)hardware/qcom/audio/configs/msm8952_64/msm8952_64.mk
+endif
 
 # MIDI feature
    PRODUCT_COPY_FILES += \
        frameworks/native/data/etc/android.software.midi.xml:system/etc/permissions/android.software.midi.xml
-
 
 #for wlan
 PRODUCT_PACKAGES += \
@@ -123,13 +133,14 @@ PRODUCT_PACKAGES += \
     libantradio \
     antradio_app
 
-PRODUCT_PACKAGES += wcnss_service
+#PRODUCT_PACKAGES += wcnss_service
 
 # MSM IRQ Balancer configuration file
 PRODUCT_COPY_FILES += \
     device/qcom/msm8952_64/msm_irqbalance.conf:system/vendor/etc/msm_irqbalance.conf \
     device/qcom/msm8952_64/msm_irqbalance_little_big.conf:system/vendor/etc/msm_irqbalance_little_big.conf
 
+ifneq ($(filter hydrogen kenzo,$(TARGET_DEVICE)),)
 #wlan driver
 PRODUCT_COPY_FILES += \
     device/qcom/msm8952_64/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini \
@@ -139,7 +150,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     wpa_supplicant_overlay.conf \
     p2p_supplicant_overlay.conf
-
+endif
 
 # Feature definition files for msm8952
 PRODUCT_COPY_FILES += \
@@ -165,14 +176,14 @@ PRODUCT_LOCALES += th_TH vi_VN tl_PH hi_IN ar_EG ru_RU tr_TR pt_BR bn_IN mr_IN t
        $(PRODUCT_PACKAGE_OVERLAYS)
 
 # Sensor HAL conf file
- PRODUCT_COPY_FILES += \
-     device/qcom/msm8952_64/sensors/hals.conf:$(TARGET_COPY_OUT_VENDOR)/etc/sensors/hals.conf
+# PRODUCT_COPY_FILES += \
+     device/qcom/msm8952_64/sensors/hals.conf:system/etc/sensors/hals.conf
 
 #PRODUCT_SUPPORTS_VERITY := true
 #PRODUCT_SYSTEM_VERITY_PARTITION := /dev/block/bootdevice/by-name/system
 
 #for android_filesystem_config.h
-PRODUCT_PACKAGES += \
+#PRODUCT_PACKAGES += \
     fs_config_files
 
 #FEATURE_OPENGLES_EXTENSION_PACK support string config file
@@ -191,8 +202,6 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.composer@2.1-service \
     android.hardware.memtrack@1.0-impl \
     android.hardware.memtrack@1.0-service \
-    android.hardware.light@2.0-impl \
-    android.hardware.light@2.0-service \
     android.hardware.configstore@1.0-service \
     android.hardware.broadcastradio@1.0-impl
 
@@ -202,12 +211,11 @@ PRODUCT_PACKAGES += \
     android.hardware.vibrator@1.0-service \
 
 # vendor manifest file
-PRODUCT_COPY_FILES += \
+#PRODUCT_COPY_FILES += \
     device/qcom/msm8952_64/vintf.xml:$(TARGET_COPY_OUT_VENDOR)/manifest.xml
 
 
 PRODUCT_PACKAGES += \
-    android.hardware.audio@2.0-service \
     android.hardware.audio@2.0-impl \
     android.hardware.audio.effect@2.0-impl \
     android.hardware.soundtrigger@2.0-impl
