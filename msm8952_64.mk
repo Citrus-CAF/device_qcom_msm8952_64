@@ -227,3 +227,63 @@ PRODUCT_PACKAGES += android.hardware.health@1.0-impl \
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.fingerprint.xml:system/etc/permissions/android.hardware.fingerprint.xml \
 
+
+#We'd like to pre-optimize as many apps as possible to speed up initial boot,
+#while blacklisting a few which cause the system.img size to go beyond its acceptable threshold.
+
+dex2oat_blacklist := \
+	com.qualcomm.qti.auth.fidocryptosample \
+	com.qualcomm.qti.qlogcat \
+	com.qualcomm.secureindicator \
+	com.quicinc.wbcserviceapp \
+	com.quicinc.wipoweragent \
+	LteDirectDiscoveryTestApp \
+	ModemTestMode \
+	ODLT \
+	MultiplePdpTest \
+	access-qcom-logkit \
+	AntHalService \
+	BasicDreams \
+	BookmarkProvider \
+	BuiltInPrintService \
+	CaptivePortalLogin \
+	CMFileManager \
+	CNESettings \
+	com.emoji.keyboard.touchpal-6.2.5.1 \
+	CompanionDeviceManager \
+	com.qti.vzw.ims.common.tests \
+	com.qti.vzw.ims.internal.tests \
+	ConferenceDialer \
+	ConfURIDialer \
+	Csk \
+	CskServer \
+	DownloadProviderUi \
+	EasterEgg \
+	EmbmsTestApp \
+	ExactCalculator \
+	FaceLock \
+	FidoCryptoService \
+	FidoSuiService \
+	HealthAuthService \
+	HTMLViewer \
+	KeyChain \
+	PIPCamera \
+	PhotoTable \
+	LiveWallpapersPicker \
+	ModemTestMode \
+	PacProcessor \
+	PrintSpooler \
+	WallpaperBackup \
+	SetScreenTimeout-debug \
+	SeempService \
+	QuickSearchBox \
+	Protips \
+	PicoTts \
+	Email \
+	LatinIME \
+	FM2 \
+	Exchange2 \
+	Gallery2 \
+	Calendar
+
+$(call add-product-dex-preopt-module-config,$(dex2oat_blacklist),disable)
