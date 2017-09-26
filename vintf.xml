@@ -48,6 +48,15 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <instance>sound_trigger.primary</instance>
         </interface>
     </hal>
+    <hal format="hidl">
+        <name>android.hardware.renderscript</name>
+        <transport arch="32+64">passthrough</transport>
+        <version>1.0</version>
+        <interface>
+            <name>IDevice</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
     <!-- video omx hal -->
 <!--    <hal format="hidl">
         <name>android.hardware.media</name>
